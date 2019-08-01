@@ -353,3 +353,40 @@
 
 
 /* ====================== BEGIN LOCAL STYLES ======================= */
+
+body {
+    font-family: 'MedievalSharp', cursive;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+} 
+
+section.board {
+    display: grid;
+    grid-template-columns: repeat(8, 10vmin);
+    grid-template-rows: repeat(8, 10vmin);
+    /* grid-auto-flow: column;  */
+    border: 10px solid goldenrod;
+    /* grid-gap: 1vmin; */
+}
+
+section.board div {
+    /* border-radius: 50%; */
+    border: 3px solid goldenrod;
+    background-color: black;
+    color: #fff;
+}
+section.board div.even:nth-child(even) {
+    background-color: red;
+    color: #fff;
+}
+
+section.board div.odd:nth-child(odd) {
+    background-color: red;
+    color: #fff;
+}
+
+.highlight {
+    border: 5px solid yellow;
+}
