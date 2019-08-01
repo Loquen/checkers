@@ -13,9 +13,8 @@
     - [To Play]()
     - White to play first.
     - Peóns move diagonally forward.
-    - If there is an opponent diagonally in front 
-      of your peóns
-      you can jump it if the following square is free.
+    - If there is an opponent diagonally in front of your 
+      peóns you can jump it if the following square is free.
     - If your peón gets to the far side of the board, 
       peón becomes a king (can move backwards).
     - Game is won when one side captures all the 
