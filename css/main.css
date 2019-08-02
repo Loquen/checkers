@@ -387,8 +387,15 @@ section.board div.odd:nth-child(odd) {
   background-color: red;
 }
 
-
 section.board div.white {
+  background-color: white;
+  border: 3px solid white;
+  border-radius: 50%;
+  width: 85%;
+  height: 85%;
+}
+
+section.board div.black {
   background-color: black;
   border: 3px solid white;
   border-radius: 50%;
