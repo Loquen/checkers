@@ -16,7 +16,7 @@ const players = {
 }
 
 /*----- app's state (variables) -----*/
-let board, winner, turn, selected, validMoves;
+let board, winner, turn, peonSelected, validMoves, highlighted;
 
 /*----- cached element references -----*/
 
@@ -43,8 +43,8 @@ function init(){
   turn = 1;
   // Set winner to null (1, -1, 'T' and null)
   winner = null;
-  // Set selected to null (no piece selected)
-  selected = null;
+  // Set selected to false (no piece selected)
+  peonSelected = false;
   // Call render() to refresh the state
   render();
 }
@@ -65,43 +65,74 @@ function render(){
 
 function handleClick(evt){
   // If the user has clicked on their own peon and no other element has been selected
-  if(evt.target.classList.contains(players[turn]) && !selected){
-    
-    selected = evt.target;
-    selected.classList.add('highlight');
-    let cell = parseInt(selected.parentNode.id.replace('cell', ''));
-    
-
-    
-    //console.log(validMoves);
-  }
-//debugger;
-  // If there is already a selected 
-  if(selected.parentElement === evt.target.parentElement){
-    // We've already selected this piece
-    selected.classList.remove('highlight');
-    selected = null;
-    return;
-  } else {
-    selected.classList.remove('highlight');
-    selected = evt.target;
-    selected.classList.add('highlight'); 
-  }
-  console.dir(evt.target);
-}
-
-function hasValidMoves(peon){
-  let cell = parseInt(peon.parentNode.id.replace('cell', ''));
-
-  // If these cells are not occupied
-  // Eventually it will need to check for jumps, backwards 
-  validMoves = {
-      'r': `#cell${(cell + 9).toString()}`,
-      'l': `#cell${(cell + 7).toString()}`
+  if(evt.target.classList.contains(players[turn])){
+    if(!peonSelected){
+      // No peon selected, add the highlight class and update our highlighted var
+      evt.target.classList.add('highlight');
+      highlighted = evt.target;
+      peonSelected = true;
+    } else if(peonSelected && evt.target === highlighted){
+      // We've clicked on the already highlighted peon, remove and stop tracking highlighted
+      highlighted.classList.remove('highlight');
+      highlighted = null;
+      peonSelected = false;
+    } else if(peonSelected){
+      // We've clicked on a new peon, remove old highlight, 
+      //swap out highlight for new peon and highlight that one
+      highlighted.classList.remove('highlight');
+      highlighted = evt.target;
+      highlighted.classList.add('highlight');
+      peonSelected = true;
     }
+  } else if(peonSelected){
+    // We need to check if the move is valid
+    if(isValidMove(highlighted, evt.target)){
+      render();
+    }
+    
+  }
+}
+//     selected = evt.target;
+//     selected.classList.add('highlight');
+//     let cell = parseInt(selected.parentNode.id.replace('cell', ''));
+    
 
-    // let left = document.querySelector(validMoves.l);
-    // let right = document.querySelector(validMoves.r);
-    // left.classList.add('valid-move');
-    // right.classList.add('valid-move');
+    
+//     //console.log(validMoves);
+//   }
+// //debugger;
+//   // If there is already a selected 
+//   if(selected.parentElement === evt.target.parentElement){
+//     // We've already selected this piece
+//     selected.classList.remove('highlight');
+//     selected = null;
+//     return;
+//   } else {
+//     selected.classList.remove('highlight');
+//     selected = evt.target;
+//     selected.classList.add('highlight'); 
+//   }
+
+
+function isValidMove(peon, targetMove){
+  let cell = parseInt(peon.parentNode.id.replace('cell', ''));
+  let move = parseInt(targetMove.id.replace('cell', ''));
+  let cellLeft = cell + (7 * turn);
+  let cellRight = cell + (9 * turn);
+  //debugger;
+  // If these cells are not occupied
+  // TODO: Eventually it will need to check for jumps, backwards 
+  validMoves = {
+    'r': `cell${cellRight.toString()}`,
+    'l': `cell${cellLeft.toString()}`
+  }
+  // If the cell we've clicked on is one of either validMoves.l or validMoves.r
+  // Also need to check that there is no piece in cell
+  if((targetMove.id === validMoves.l || targetMove.id === validMoves.r) && (!board[cellLeft] || !board[cellRight])){
+    board[cell] = 0;
+    board[move] = turn;
+    return true;
+  }
+
+  return false;
 }
