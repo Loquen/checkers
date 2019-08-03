@@ -50,10 +50,12 @@ function init(){
 }
 
 function render(){
+  
   // Loop through board array and render each cell as empty or peon
   board.forEach(function(cell,idx){
     // If the board has a peon and that square is valid 
     // then we can grab the square and render
+  
     if(board[idx] !== 0 && validSquares.includes(idx)){
       let id = `#cell${idx.toString()} div`;
       let div = document.querySelector(id);
@@ -87,6 +89,8 @@ function handleClick(evt){
   } else if(peonSelected){
     // We need to check if the move is valid
     if(isValidMove(highlighted, evt.target)){
+      highlighted.classList.remove(players[turn], 'highlight');
+      turn *= -1;
       render();
     }
     
