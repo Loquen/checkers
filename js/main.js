@@ -55,7 +55,8 @@ function render(){
     // If the board has a peon and that square is valid 
     // then we can grab the square and render
     if(board[idx] !== 0 && validSquares.includes(idx)){
-      let div = document.getElementById(idx.toString());
+      let id = `#cell${idx.toString()} div`;
+      let div = document.querySelector(id);
       div = board[idx] === 1 ? 
         div.classList.add('white') : div.classList.add('black');
     }
@@ -68,21 +69,39 @@ function handleClick(evt){
     
     selected = evt.target;
     selected.classList.add('highlight');
+    let cell = parseInt(selected.parentNode.id.replace('cell', ''));
+    
 
-    validMoves = {
-      'r': parseInt(selected.id) + 9,
-      'l': parseInt(selected.id) + 7
+    
+    //console.log(validMoves);
+  }
+//debugger;
+  // If there is already a selected 
+  if(selected.parentElement === evt.target.parentElement){
+    // We've already selected this piece
+    selected.classList.remove('highlight');
+    selected = null;
+    return;
+  } else {
+    selected.classList.remove('highlight');
+    selected = evt.target;
+    selected.classList.add('highlight'); 
+  }
+  console.dir(evt.target);
+}
+
+function hasValidMoves(peon){
+  let cell = parseInt(peon.parentNode.id.replace('cell', ''));
+
+  // If these cells are not occupied
+  // Eventually it will need to check for jumps, backwards 
+  validMoves = {
+      'r': `#cell${(cell + 9).toString()}`,
+      'l': `#cell${(cell + 7).toString()}`
     }
 
-    let left = document.getElementById(validMoves.l);
-    let right = document.getElementById(validMoves.r);
-    left.classList.add('valid-move');
-    right.classList.add('valid-move');
-    console.log(validMoves);
-  }
-
-  // If there is already a selected 
-  if(selected){
-
-  }
+    // let left = document.querySelector(validMoves.l);
+    // let right = document.querySelector(validMoves.r);
+    // left.classList.add('valid-move');
+    // right.classList.add('valid-move');
 }

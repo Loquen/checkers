@@ -407,6 +407,6 @@ section.board div.highlight {
   border: 10px solid rgb(6, 177, 63);
 }
 
-section.board div > .valid-move {
+section.board div.valid-move {
   background-color: aquamarine;
 }
