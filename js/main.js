@@ -55,13 +55,17 @@ function render(){
   board.forEach(function(cell,idx){
     // If the board has a peon and that square is valid 
     // then we can grab the square and render
-  
-    if(board[idx] !== 0 && validSquares.includes(idx)){
+    if(validSquares.includes(idx)){
       let id = `#cell${idx.toString()} div`;
       let div = document.querySelector(id);
-      div = board[idx] === 1 ? 
-        div.classList.add('white') : div.classList.add('black');
+      if(board[idx] !== 0){
+        div = board[idx] === 1 ? 
+          div.classList.add('white') : div.classList.add('black');
+      }else {
+        div.classList.remove('white', 'black');
+      }
     }
+    
   });
 }
 
@@ -88,55 +92,58 @@ function handleClick(evt){
     }
   } else if(peonSelected){
     // We need to check if the move is valid
-    if(isValidMove(highlighted, evt.target)){
-      highlighted.classList.remove(players[turn], 'highlight');
-      turn *= -1;
-      render();
+    let move = isValidMove(highlighted, evt.target);
+    // debugger;
+    if(move === 'l' || move === 'r'){
+      // debugger;
+      document.getElementById(validMoves[move]).classList.remove(players[-(turn)]);
     }
+    highlighted.classList.remove(players[turn], 'highlight');
+    turn *= -1;
+    render();
     
   }
 }
-//     selected = evt.target;
-//     selected.classList.add('highlight');
-//     let cell = parseInt(selected.parentNode.id.replace('cell', ''));
-    
-
-    
-//     //console.log(validMoves);
-//   }
-// //debugger;
-//   // If there is already a selected 
-//   if(selected.parentElement === evt.target.parentElement){
-//     // We've already selected this piece
-//     selected.classList.remove('highlight');
-//     selected = null;
-//     return;
-//   } else {
-//     selected.classList.remove('highlight');
-//     selected = evt.target;
-//     selected.classList.add('highlight'); 
-//   }
-
 
 function isValidMove(peon, targetMove){
   let cell = parseInt(peon.parentNode.id.replace('cell', ''));
   let move = parseInt(targetMove.id.replace('cell', ''));
   let cellLeft = cell + (7 * turn);
+  let jumpLeft = cell + (14 * turn);
   let cellRight = cell + (9 * turn);
+  let jumpRight = cell + (18 * turn);
   //debugger;
   // If these cells are not occupied
   // TODO: Eventually it will need to check for jumps, backwards 
   validMoves = {
     'r': `cell${cellRight.toString()}`,
-    'l': `cell${cellLeft.toString()}`
+    'l': `cell${cellLeft.toString()}`,
+    'jumpL': `cell${jumpLeft.toString()}`,
+    'jumpR': `cell${jumpRight.toString()}`
   }
   // If the cell we've clicked on is one of either validMoves.l or validMoves.r
   // Also need to check that there is no piece in cell
   if((targetMove.id === validMoves.l || targetMove.id === validMoves.r) && (!board[cellLeft] || !board[cellRight])){
     board[cell] = 0;
     board[move] = turn;
-    return true;
+    return 1;
+  } else if(targetMove.id === validMoves.jumpL || targetMove.id === validMoves.jumpR){
+    if(board[cellLeft] === -(turn)){
+      board[cell] = 0;
+      board[cellLeft] = 0;
+      board[move] = turn;
+      return 'l';
+    }
+    if(board[cellRight] === -(turn)){
+      board[cell] = 0;
+      board[cellRight] = 0;
+      board[move] = turn;
+      return 'r';
+    }
   }
+  // } else if(){
+
+  // }
 
   return false;
 }
