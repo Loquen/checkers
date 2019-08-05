@@ -19,10 +19,11 @@ const players = {
 let board, winner, turn, peonSelected, validMoves, highlighted;
 
 /*----- cached element references -----*/
-
+let msgEl = document.getElementById('msg');
 
 /*----- event listeners -----*/
 document.querySelector('.board').addEventListener('click', handleClick);
+document.querySelector('button').addEventListener('click', reset);
 
 /*----- functions -----*/
 init();
@@ -32,13 +33,23 @@ function init(){
   board = [
     0,1,0,1,0,1,0,1,
     1,0,1,0,1,0,1,0,
-    0,1,0,1,0,1,0,1,
+    0,0,0,0,0,0,0,1,
+    0,0,1,0,1,0,0,0,
+    0,0,0,-1,0,-1,0,0,
     0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,
-    -1,0,-1,0,-1,0,-1,0,
-    0,-1,0,-1,0,-1,0,-1,
-    -1,0,-1,0,-1,0,-1,0
+    0,0,0,0,0,0,0,0
   ];
+  // board = [
+  //   0,1,0,1,0,1,0,1,
+  //   1,0,1,0,1,0,1,0,
+  //   0,1,0,1,0,1,0,1,
+  //   0,0,0,0,0,0,0,0,
+  //   0,0,0,0,0,0,0,0,
+  //   -1,0,-1,0,-1,0,-1,0,
+  //   0,-1,0,-1,0,-1,0,-1,
+  //   -1,0,-1,0,-1,0,-1,0
+  // ];
   // Set turn to Player 1
   turn = 1;
   // Set winner to null (1, -1, 'T' and null)
@@ -49,8 +60,18 @@ function init(){
   render();
 }
 
+function reset(){
+  board.forEach(function(cell, idx){
+    let id = `#cell${idx.toString()} div`;
+    let div = document.querySelector(id);
+    if(div){
+      div.classList.remove('white', 'black', 'highlight');
+    }
+  });
+  init();
+}
+
 function render(){
-  
   // Loop through board array and render each cell as empty or peon
   board.forEach(function(cell,idx){
     // If the board has a peon and that square is valid 
@@ -62,15 +83,21 @@ function render(){
         div = board[idx] === 1 ? 
           div.classList.add('white') : div.classList.add('black');
       }else {
-        div.classList.remove('white', 'black');
+        div.classList.remove('white', 'black', 'highlight');
       }
     }
-    
   });
+
+  if(winner){
+    // Winning!
+    msgEl.textContent =`${players[winner][0].toUpperCase()}${players[winner].slice(1)} Wins!`
+  } else {
+    msgEl.textContent = `${players[turn][0].toUpperCase()}${players[turn].slice(1)}'s Turn`
+  }
 }
 
 function handleClick(evt){
-
+  if(winner) return;
   //Is click a piece?
   if(evt.target.classList.contains(players[turn]) || evt.target.classList.contains(players[-(turn)])){
     // Y -> Is selected piece our turn?
@@ -97,70 +124,38 @@ function handleClick(evt){
   } else if (peonSelected){       // N -> Is peonSelected?
     // Y -> isValidMove?
     let move = isValidMove(highlighted, evt.target);
-    console.log(move, 'valid?');
-      // Y -> move piece, update board, change turn
-      if(move){
-        // if(move === 'l' || move === 'r'){
-        //   document.getElementById(validMoves[move]).classList.remove(players[-(turn)]);
-        // }
-        highlighted.classList.remove(players[turn], 'highlight');
-        turn *= -1;
-        render();
-      }
-      
-      // N -> return
+    console.log(move);
+    // Y -> change turn and rerender
+    if(move){
+      turn *= -1;
+      winner = getWinner();
+      render();
+    }
   } else {
-    return;                       // N -> return
+    return;  // N -> not a valid click, return
   }
-    
-      
-     
+}
 
+function getWinner(){
+  let points = {
+    1: 0,
+    '-1': 0
+  }
+  // Loop through board and add up all scores
+  board.forEach(function(el, idx){
+    if(board[idx]){ // value is not 0
+      points[board[idx]]++;
+    } 
+  });
 
-  
-  /*// If the user has clicked on their own peon and no other element has been selected
-  if(!evt.target.classList.contains(players[turn]) && peonSelected){
-    // check board for other team
-    debugger;
-    let target = parseInt(evt.target.id.replace('cell', ''));
-    if(board[target] === -(turn)){
-      return;
-    }
-  } else if(evt.target.classList.contains(players[turn])){
-    if(!peonSelected){
-      // No peon selected, add the highlight class and update our highlighted var
-      evt.target.classList.add('highlight');
-      highlighted = evt.target;
-      peonSelected = true;
-    } else if(peonSelected && evt.target === highlighted){
-      // We've clicked on the already highlighted peon, remove and stop tracking highlighted
-      highlighted.classList.remove('highlight');
-      highlighted = null;
-      peonSelected = false;
-    } else if(peonSelected){
-      // We've clicked on a new peon, remove old highlight, 
-      //swap out highlight for new peon and highlight that one
-      highlighted.classList.remove('highlight');
-      highlighted = evt.target;
-      highlighted.classList.add('highlight');
-      peonSelected = true;
-    }
-    console.dir(highlighted);
-    console.log(turn);
-  } else if(peonSelected && highlighted.classList.contains(players[turn])){
-    console.dir(highlighted);
-    console.log(turn);
-
-    // We need to check if the move is valid
-    let move = isValidMove(highlighted, evt.target);
-    if(move === 'l' || move === 'r'){
-      document.getElementById(validMoves[move]).classList.remove(players[-(turn)]);
-    }
-    highlighted.classList.remove(players[turn], 'highlight');
-    turn *= -1;
-    render();
-    
-  }*/
+  if(points[turn] === 0){
+    return -(turn);
+  } else if (points[-(turn)] === 0){
+    return turn;
+  }
+  console.log(points);
+  // If element is negative, add to the black side
+  // if element is positive, add to the white side
 }
 
 function isValidMove(peon, targetMove){
@@ -187,7 +182,7 @@ function isValidMove(peon, targetMove){
     return 1;
   } else if(targetMove.id === validMoves.jumpL || targetMove.id === validMoves.jumpR){
     // Otherwise we are checking the jump squares, and if valid we update board
-    if(board[cellLeft] === -(turn)){
+    if(board[cellLeft] === -(turn) && targetMove.id === validMoves.jumpL){ // also check if targetMove === validMoves.jumpL... or jumpR
       board[cell] = 0;
       board[cellLeft] = 0;
       board[move] = turn;
