@@ -15,11 +15,17 @@ const players = {
   '-1': 'black'
 }
 
+const kingMe = {
+  1: [1,3,5,7],
+  '-1': [56,58,60,62]
+}
 /*----- app's state (variables) -----*/
 let board, winner, turn, peonSelected, validMoves, highlighted;
 
 /*----- cached element references -----*/
 let msgEl = document.getElementById('msg');
+let highlight = 'highlight';
+// let 
 
 /*----- event listeners -----*/
 document.querySelector('.board').addEventListener('click', handleClick);
@@ -31,13 +37,13 @@ init();
 function init(){
   // Initialize the board with both players
   board = [
-    0,1,0,1,0,1,0,1,
-    1,0,1,0,1,0,1,0,
-    0,0,0,0,0,0,0,1,
-    0,0,1,0,1,0,0,0,
-    0,0,0,-1,0,-1,0,0,
     0,0,0,0,0,0,0,0,
+    0,0,0,0,-1,0,0,0,
     0,0,0,0,0,0,0,0,
+    0,0,2,0,0,0,0,0,
+    0,0,0,-2,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    0,0,0,1,0,0,0,0,
     0,0,0,0,0,0,0,0
   ];
   // board = [
@@ -65,7 +71,7 @@ function reset(){
     let id = `#cell${idx.toString()} div`;
     let div = document.querySelector(id);
     if(div){
-      div.classList.remove('white', 'black', 'highlight');
+      div.classList.remove('white', 'black', highlight);
     }
   });
   init();
@@ -80,10 +86,11 @@ function render(){
       let id = `#cell${idx.toString()} div`;
       let div = document.querySelector(id);
       if(board[idx] !== 0){
-        div = board[idx] === 1 ? 
-          div.classList.add('white') : div.classList.add('black');
+        // If a 1 -> white, if 2 -> white King, else if 2 -> black king, else, black
+        div = board[idx] === 1 || board[idx] === 2 ? 
+          div.classList.add('white') : div.classList.add('black'); // TODO: add logic to render kings
       }else {
-        div.classList.remove('white', 'black', 'highlight');
+        div.classList.remove('white', 'black', highlight);
       }
     }
   });
@@ -105,7 +112,7 @@ function handleClick(evt){
       // Y -> Is piece already highlighted?
       if(highlighted){
         // Is there a highlighted piece, if so remove
-        highlighted.classList.remove('highlight');
+        highlighted.classList.remove(highlight);
       }
       if(highlighted === evt.target){
         // Y -> unhighlight and unselect peon
@@ -114,7 +121,7 @@ function handleClick(evt){
       } else {
         // N -> change current highlighted piece
         highlighted = evt.target;
-        highlighted.classList.add('highlight');
+        highlighted.classList.add(highlight);
         peonSelected = true;
       }
       console.log(evt.target, 'piece');
@@ -165,6 +172,10 @@ function isValidMove(peon, targetMove){
   let jumpLeft = cell + (14 * turn);
   let cellRight = cell + (9 * turn);
   let jumpRight = cell + (18 * turn);
+  let cellBackLeft = cell - (7 * turn);
+  let cellBackRight = cell - (9 * turn);
+  let cellJumpBackLeft = cell - (14 * turn);
+  let cellJumpBackRight = cell - (18 * turn);
   //debugger;
   // If these cells are not occupied
   // TODO: Eventually it will need to check for double jumps, backwards/king movement
@@ -172,29 +183,51 @@ function isValidMove(peon, targetMove){
     'r': `cell${cellRight.toString()}`,
     'l': `cell${cellLeft.toString()}`,
     'jumpL': `cell${jumpLeft.toString()}`,
-    'jumpR': `cell${jumpRight.toString()}`
+    'jumpR': `cell${jumpRight.toString()}`,
+    'backRight': `cell${cellBackRight.toString()}`,
+    'backLeft': `cell${cellBackLeft.toString()}`,
+    'jumpBackLeft': `cell${cellJumpBackLeft.toString()}`,
+    'jumpBackRight': `cell${cellJumpBackRight.toString()}`,
   }
+  debugger;
   // If the cell we've clicked on is one of either validMoves.l or validMoves.r
   // Also need to check that there is no piece in cell
-  if((targetMove.id === validMoves.l || targetMove.id === validMoves.r) && (!board[cellLeft] || !board[cellRight])){
-    board[cell] = 0;
-    board[move] = turn;
-    return 1;
-  } else if(targetMove.id === validMoves.jumpL || targetMove.id === validMoves.jumpR){
-    // Otherwise we are checking the jump squares, and if valid we update board
-    if(board[cellLeft] === -(turn) && targetMove.id === validMoves.jumpL){ // also check if targetMove === validMoves.jumpL... or jumpR
+  if((move > cell && turn === 1) || (move < cell && turn === -1)){   // forward movement
+    if((targetMove.id === validMoves.l || targetMove.id === validMoves.r) && (!board[cellLeft] || !board[cellRight])){
+      board[move] = board[cell];
       board[cell] = 0;
-      board[cellLeft] = 0;
-      board[move] = turn;
-      return 'l';
+    } else if(targetMove.id === validMoves.jumpL || targetMove.id === validMoves.jumpR){
+      // Otherwise we are checking the jump squares, and if valid we update board
+      if((board[cellLeft] === -(turn) || board[cellLeft] === -(turn * 2)) && targetMove.id === validMoves.jumpL){ // need to check if the value is 1, 2, or -1, -2 not just 1, -1
+        board[move] = board[cell];
+        board[cell] = 0;
+        board[cellLeft] = 0;
+      }
+      if(board[cellRight] === -(turn) || board[cellRight] === -(turn * 2)){
+        board[move] = board[cell];
+        board[cell] = 0;
+        board[cellRight] = 0;
+      }
     }
-    if(board[cellRight] === -(turn)){
+    return move;
+  } else if(board[cell] === turn * 2){ // King, check for backwards moves
+    if((targetMove.id === validMoves.backLeft || targetMove.id === validMoves.backRight) && (!board[cellBackLeft] || !board[cellBackRight])){
+      board[move] = board[cell];
       board[cell] = 0;
-      board[cellRight] = 0;
-      board[move] = turn;
-      return 'r';
+    } else if(targetMove.id === validMoves.jumpBackLeft || targetMove.id === validMoves.jumpBackRight){
+      // Otherwise we are checking the jump squares, and if valid we update board
+      if((board[cellBackLeft] === -(turn) || board[cellBackLeft] === -(turn * 2))  && targetMove.id === validMoves.jumpBackLeft){ // also check if targetMove === validMoves.jumpL... or jumpR
+        board[move] = board[cell];
+        board[cell] = 0;
+        board[cellBackLeft] = 0;
+      }
+      if(board[cellBackRight] === -(turn) || board[cellBackRight] === -(turn * 2)){ // May need to change this to deal with more kings
+        board[move] = board[cell];
+        board[cell] = 0;
+        board[cellBackRight] = 0;
+      }
     }
+    return move;
   }
-
   return false;
 }
