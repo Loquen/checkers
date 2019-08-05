@@ -70,8 +70,63 @@ function render(){
 }
 
 function handleClick(evt){
-  // If the user has clicked on their own peon and no other element has been selected
-  if(evt.target.classList.contains(players[turn])){
+
+  //Is click a piece?
+  if(evt.target.classList.contains(players[turn]) || evt.target.classList.contains(players[-(turn)])){
+    // Y -> Is selected piece our turn?
+    if(evt.target.classList.contains(players[turn])){
+      // Y -> Is piece already highlighted?
+      if(highlighted){
+        // Is there a highlighted piece, if so remove
+        highlighted.classList.remove('highlight');
+      }
+      if(highlighted === evt.target){
+        // Y -> unhighlight and unselect peon
+        peonSelected = false;
+        highlighted = null;
+      } else {
+        // N -> change current highlighted piece
+        highlighted = evt.target;
+        highlighted.classList.add('highlight');
+        peonSelected = true;
+      }
+      console.log(evt.target, 'piece');
+    } else {                      // N -> return
+      return;
+    }
+  } else if (peonSelected){       // N -> Is peonSelected?
+    // Y -> isValidMove?
+    let move = isValidMove(highlighted, evt.target);
+    console.log(move, 'valid?');
+      // Y -> move piece, update board, change turn
+      if(move){
+        // if(move === 'l' || move === 'r'){
+        //   document.getElementById(validMoves[move]).classList.remove(players[-(turn)]);
+        // }
+        highlighted.classList.remove(players[turn], 'highlight');
+        turn *= -1;
+        render();
+      }
+      
+      // N -> return
+  } else {
+    return;                       // N -> return
+  }
+    
+      
+     
+
+
+  
+  /*// If the user has clicked on their own peon and no other element has been selected
+  if(!evt.target.classList.contains(players[turn]) && peonSelected){
+    // check board for other team
+    debugger;
+    let target = parseInt(evt.target.id.replace('cell', ''));
+    if(board[target] === -(turn)){
+      return;
+    }
+  } else if(evt.target.classList.contains(players[turn])){
     if(!peonSelected){
       // No peon selected, add the highlight class and update our highlighted var
       evt.target.classList.add('highlight');
@@ -90,19 +145,22 @@ function handleClick(evt){
       highlighted.classList.add('highlight');
       peonSelected = true;
     }
-  } else if(peonSelected){
+    console.dir(highlighted);
+    console.log(turn);
+  } else if(peonSelected && highlighted.classList.contains(players[turn])){
+    console.dir(highlighted);
+    console.log(turn);
+
     // We need to check if the move is valid
     let move = isValidMove(highlighted, evt.target);
-    // debugger;
     if(move === 'l' || move === 'r'){
-      // debugger;
       document.getElementById(validMoves[move]).classList.remove(players[-(turn)]);
     }
     highlighted.classList.remove(players[turn], 'highlight');
     turn *= -1;
     render();
     
-  }
+  }*/
 }
 
 function isValidMove(peon, targetMove){
@@ -114,7 +172,7 @@ function isValidMove(peon, targetMove){
   let jumpRight = cell + (18 * turn);
   //debugger;
   // If these cells are not occupied
-  // TODO: Eventually it will need to check for jumps, backwards 
+  // TODO: Eventually it will need to check for double jumps, backwards/king movement
   validMoves = {
     'r': `cell${cellRight.toString()}`,
     'l': `cell${cellLeft.toString()}`,
@@ -128,6 +186,7 @@ function isValidMove(peon, targetMove){
     board[move] = turn;
     return 1;
   } else if(targetMove.id === validMoves.jumpL || targetMove.id === validMoves.jumpR){
+    // Otherwise we are checking the jump squares, and if valid we update board
     if(board[cellLeft] === -(turn)){
       board[cell] = 0;
       board[cellLeft] = 0;
@@ -141,9 +200,6 @@ function isValidMove(peon, targetMove){
       return 'r';
     }
   }
-  // } else if(){
-
-  // }
 
   return false;
 }
