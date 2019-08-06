@@ -166,7 +166,6 @@ function getWinner(){
 }
 
 function kingMe(move){
-  debugger;
   let cell = `cell${move}`
   if(kingable[turn].includes(cell)) board[move] = turn * 2;
 }
