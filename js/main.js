@@ -16,8 +16,8 @@ const players = {
 }
 
 const kingable = {
-  '-1': [1,3,5,7],
-  1: [56,58,60,62]
+  '-1': ['cell1','cell3','cell5','cell7'],
+  1: ['cell56','cell58','cell60','cell62']
 }
 /*----- app's state (variables) -----*/
 let board, winner, turn, peonSelected, validMoves, highlighted;
@@ -38,12 +38,12 @@ function init(){
   // Initialize the board with both players
   board = [
     0,0,0,0,0,0,0,0,
-    0,0,0,0,-1,0,0,0,
+    0,0,0,0,0,0,1,0,
+    0,0,0,1,0,-1,0,0,
     0,0,0,0,0,0,0,0,
-    0,0,2,0,0,0,0,0,
-    0,0,0,-2,0,0,0,0,
-    0,0,0,0,0,0,0,0,
-    0,0,0,1,0,0,0,0,
+    0,1,0,0,0,-1,0,0,
+    -1,0,0,0,0,0,0,0,
+    0,0,0,0,0,-1,0,0,
     0,0,0,0,0,0,0,0
   ];
   // board = [
@@ -134,7 +134,7 @@ function handleClick(evt){
     kingMe(move);
     console.log(board[move]);
     // Y -> change turn and rerender
-    if(move){
+    if(move){ // We need to check if move is valid ^
       turn *= -1;
       winner = getWinner();
       render();
@@ -166,7 +166,9 @@ function getWinner(){
 }
 
 function kingMe(move){
-  if(kingable[turn].includes(move)) board[move] = turn * 2;
+  debugger;
+  let cell = `cell${move}`
+  if(kingable[turn].includes(cell)) board[move] = turn * 2;
 }
 
 function isValidMove(peon, targetMove){
@@ -181,7 +183,7 @@ function isValidMove(peon, targetMove){
   let cellJumpBackLeft = cell - (14 * turn);
   let cellJumpBackRight = cell - (18 * turn);
   // If these cells are not occupied
-  // TODO: Eventually it will need to check for double jumps, backwards/king movement
+  // TODO: Eventually it will need to check for double jumps
   validMoves = {
     'r': `cell${cellRight.toString()}`,
     'l': `cell${cellLeft.toString()}`,
@@ -192,7 +194,6 @@ function isValidMove(peon, targetMove){
     'jumpBackLeft': `cell${cellJumpBackLeft.toString()}`,
     'jumpBackRight': `cell${cellJumpBackRight.toString()}`,
   }
-  
   // If the cell we've clicked on is one of either validMoves.l or validMoves.r
   // Also need to check that there is no piece in cell
   if((move > cell && turn === 1) || (move < cell && turn === -1)){   // forward movement
@@ -212,7 +213,6 @@ function isValidMove(peon, targetMove){
         board[cellRight] = 0;
       }
     }
-    return move;
   } else if(board[cell] === turn * 2){ // King, check for backwards moves
     if((targetMove.id === validMoves.backLeft || targetMove.id === validMoves.backRight) && (!board[cellBackLeft] || !board[cellBackRight])){
       board[move] = board[cell];
@@ -230,7 +230,11 @@ function isValidMove(peon, targetMove){
         board[cellBackRight] = 0;
       }
     }
-    return move;
   }
-  return false;
+  // Check validity of calculated move
+  if(Object.values(validMoves).includes(targetMove.id)){
+    return move;
+  }else{
+    return false;
+  }
 }
