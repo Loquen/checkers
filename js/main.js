@@ -23,13 +23,15 @@ const kingable = {
 let board, winner, turn, peonSelected, validMoves, highlighted;
 
 /*----- cached element references -----*/
-let msgEl = document.getElementById('msg');
+let turnEl = document.getElementById('turn');
+let modalEl = document.getElementById('winModal');
+let winEl = document.getElementById('winMsg');
 let highlight = 'highlight';
-// let 
 
 /*----- event listeners -----*/
 document.querySelector('.board').addEventListener('click', handleClick);
 document.querySelector('button').addEventListener('click', reset);
+document.querySelector('.closeModal').addEventListener('click', closeModal);
 
 /*----- functions -----*/
 init();
@@ -38,12 +40,12 @@ function init(){
   // Initialize the board with both players
   board = [
     0,0,0,0,0,0,0,0,
-    0,0,-2,0,-1,0,1,0,
-    0,0,0,2,0,-2,0,0,
-    0,0,-1,0,-1,0,0,0,
+    0,0,-2,0,0,0,0,0,
+    0,0,0,2,0,0,0,0,
+    0,0,1,0,0,0,0,0,
     0,0,0,0,0,0,0,0,
-    -1,0,0,0,0,0,0,0,
-    0,0,0,0,0,-1,0,0,
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,1,0,0,
     0,0,0,0,0,0,0,0
   ];
   // board = [
@@ -101,9 +103,11 @@ function render(){
 
   if(winner){
     // Winning!
-    msgEl.textContent =`${players[winner][0].toUpperCase()}${players[winner].slice(1)} Wins!`
+    // Display modal
+    modalEl.style.display = "block";
+    winEl.textContent =`${players[winner][0].toUpperCase()}${players[winner].slice(1)} Wins!`
   } else {
-    msgEl.textContent = `${players[turn][0].toUpperCase()}${players[turn].slice(1)}'s Turn`
+    turnEl.textContent = `${players[turn][0].toUpperCase()}${players[turn].slice(1)}'s Turn`
   }
 }
 
@@ -145,6 +149,18 @@ function handleClick(evt){
     }
   } else {
     return;  // N -> not a valid click, return
+  }
+}
+
+// Close modal on click of X
+function closeModal(evt){
+  winModal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == winModal) {
+    winModal.style.display = "none";
   }
 }
 

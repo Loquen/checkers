@@ -11,7 +11,7 @@
 <body>
   <header>
       <h1>Draughts</h1>
-      <h2 id="msg"></h2>
+      <h2 id="turn"></h2>
   </header>
   <div id="c0r7"></div>
   <section class="board">
@@ -91,5 +91,12 @@
     <button>Reset</button>        
     <a href="">How to Play</a>
   </footer>
+  <!-- MODAL for win logic -->
+  <div id="winModal" class="modal">
+    <div class="modal-content">
+      <span class="closeModal">&times;</span>
+      <h1 id="winMsg"></h1>
+    </div>  
+  </div>
 </body>
 </html>
