@@ -1,4 +1,4 @@
-/*----- constants -----*/
+/*----------------- CONSTANTS -----------------*/
 const validSquares = [
   1,3,5,7,
   8,10,12,14,
@@ -19,21 +19,21 @@ const kingable = {
   '-1': ['cell1','cell3','cell5','cell7'],
   1: ['cell56','cell58','cell60','cell62']
 }
-/*----- app's state (variables) -----*/
+/*------------------ STATE VARIABLES -----------------*/
 let board, winner, turn, peonSelected, validMoves, highlighted;
 
-/*----- cached element references -----*/
+/*----------------- CACHED ELEMENT REFERENCES ---------------------*/
 let turnEl = document.getElementById('turn');
 let modalEl = document.getElementById('winModal');
 let winEl = document.getElementById('winMsg');
 let highlight = 'highlight';
 
-/*----- event listeners -----*/
+/*-------------- EVENT LISTENERS ---------------*/
 document.querySelector('.board').addEventListener('click', handleClick);
 document.querySelector('button').addEventListener('click', reset);
 document.querySelector('.closeModal').addEventListener('click', closeModal);
 
-/*----- functions -----*/
+/*--------------- FUNCTIONS ---------------*/
 init();
 
 function init(){
@@ -89,11 +89,10 @@ function render(){
       let div = document.querySelector(id);
       if(board[idx] !== 0){
         // If a 1 -> white, if 2 -> white King, else if 2 -> black king, else, black
-        // debugger;
         if(board[idx] > 0){
-          div = board[idx] === 1 ? div.classList.add('white') : div.classList.add('white', 'king'); // TODO: add logic to render kings
+          div = board[idx] === 1 ? div.classList.add('white') : div.classList.add('white', 'king');
         } else {
-          div = board[idx] === -1 ? div.classList.add('black') : div.classList.add('black', 'king'); // TODO: add logic to render kings
+          div = board[idx] === -1 ? div.classList.add('black') : div.classList.add('black', 'king');
         }        
       }else {
         div.classList.remove('white', 'black', highlight);
@@ -102,8 +101,6 @@ function render(){
   });
 
   if(winner){
-    // Winning!
-    // Display modal
     modalEl.style.display = "block";
     winEl.textContent =`${players[winner][0].toUpperCase()}${players[winner].slice(1)} Wins!`
   } else {
@@ -134,23 +131,21 @@ function handleClick(evt){
         highlighted.classList.add(highlight);
         peonSelected = true;
       }
-      console.log(evt.target, 'piece');
-    } else {                      // N -> return
+    } else {                      // N 
       return;
     }
   } else if (peonSelected){       // N -> Is peonSelected?
-    // Y -> isValidMove?
+    // Y -> isValidMove? and is move kingable?
     let move = isValidMove(highlighted, evt.target);
     kingMe(move);
-    console.log(board[move]);
     // Y -> change turn and rerender
-    if(move){ // We need to check if move is valid ^
+    if(move){
       turn *= -1;
       winner = getWinner();
       render();
     }
   } else {
-    return;  // N -> not a valid click, return
+    return;  // N -> not a valid click
   }
 }
 
@@ -172,7 +167,7 @@ function getWinner(){
     1: 0,
     '-1': 0
   }
-  
+
   // Loop through board and add up all scores
   board.forEach(function(el, idx){
     if(board[idx]){ // value is not 0
@@ -217,16 +212,16 @@ function isValidMove(peon, targetMove){
     'jumpBackLeft': `cell${cellJumpBackLeft.toString()}`,
     'jumpBackRight': `cell${cellJumpBackRight.toString()}`,
   }
-  // If the cell we've clicked on is one of either validMoves.l or validMoves.r
-  // Also need to check that there is no piece in cell
-  debugger;
-  if((move > cell && turn === 1) || (move < cell && turn === -1)){   // forward movement
+  // Forward Movement
+  if((move > cell && turn === 1) || (move < cell && turn === -1)){   
+    // If the cell we've clicked on is forward right or left
+    // and check that cell is empty
     if((targetMove.id === validMoves.l || targetMove.id === validMoves.r) && (!board[cellLeft] || !board[cellRight])){
       board[move] = board[cell];
       board[cell] = 0;
     } else if(targetMove.id === validMoves.jumpL || targetMove.id === validMoves.jumpR){
       // Otherwise we are checking the jump squares, and if valid we update board
-      if((board[cellLeft] === -(turn) || board[cellLeft] === -(turn * 2)) && targetMove.id === validMoves.jumpL){ // need to check if the value is 1, 2, or -1, -2 not just 1, -1
+      if((board[cellLeft] === -(turn) || board[cellLeft] === -(turn * 2)) && targetMove.id === validMoves.jumpL){ 
         board[move] = board[cell];
         board[cell] = 0;
         board[cellLeft] = 0;
@@ -241,7 +236,9 @@ function isValidMove(peon, targetMove){
     if(Object.values(validMoves).includes(targetMove.id)){
       return move;
     }
-  } else if(board[cell] === turn * 2){ // King, check for backwards moves
+  } else if(board[cell] === turn * 2){ // If king, check for backwards movement
+    // If the cell we've clicked on is back left or back right
+    // and check that cell is empty
     if((targetMove.id === validMoves.backLeft || targetMove.id === validMoves.backRight) && (!board[cellBackLeft] || !board[cellBackRight])){
       board[move] = board[cell];
       board[cell] = 0;
