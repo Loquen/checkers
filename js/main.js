@@ -37,9 +37,9 @@ init();
 function init(){
   // Initialize the board with both players
   board = [
-    0,0,0,0,0,0,0,0,
+    0,2,0,-2,0,0,0,0,
     0,0,0,0,0,0,1,0,
-    0,0,0,1,0,-1,0,0,
+    0,0,0,2,0,-2,0,0,
     0,0,0,0,0,0,0,0,
     0,1,0,0,0,-1,0,0,
     -1,0,0,0,0,0,0,0,
@@ -87,8 +87,12 @@ function render(){
       let div = document.querySelector(id);
       if(board[idx] !== 0){
         // If a 1 -> white, if 2 -> white King, else if 2 -> black king, else, black
-        div = board[idx] === 1 || board[idx] === 2 ? 
-          div.classList.add('white') : div.classList.add('black'); // TODO: add logic to render kings
+        // debugger;
+        if(board[idx] > 0){
+          div = board[idx] === 1 ? div.classList.add('white') : div.classList.add('white', 'king'); // TODO: add logic to render kings
+        } else {
+          div = board[idx] === -1 ? div.classList.add('black') : div.classList.add('black', 'king'); // TODO: add logic to render kings
+        }        
       }else {
         div.classList.remove('white', 'black', highlight);
       }
@@ -212,6 +216,9 @@ function isValidMove(peon, targetMove){
         board[cellRight] = 0;
       }
     }
+    if(Object.values(validMoves).includes(targetMove.id)){
+      return move;
+    }
   } else if(board[cell] === turn * 2){ // King, check for backwards moves
     if((targetMove.id === validMoves.backLeft || targetMove.id === validMoves.backRight) && (!board[cellBackLeft] || !board[cellBackRight])){
       board[move] = board[cell];
@@ -229,11 +236,12 @@ function isValidMove(peon, targetMove){
         board[cellBackRight] = 0;
       }
     }
+    if(Object.values(validMoves).includes(targetMove.id)){
+      return move;
+    }
   }
   // Check validity of calculated move
-  if(Object.values(validMoves).includes(targetMove.id)){
-    return move;
-  }else{
-    return false;
-  }
+ 
+  return false;
+  
 }
