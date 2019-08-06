@@ -111,6 +111,8 @@ function render(){
   }
 }
 
+////////////////////////////// CLICK HANDLING ////////////////////////////////
+
 function handleClick(evt){
   if(winner) return;
   //Is click a piece?
@@ -158,17 +160,19 @@ function closeModal(evt){
 }
 
 // When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == winModal) {
+window.onclick = function(evt) {
+  if (evt.target == winModal) {
     winModal.style.display = "none";
   }
 }
 
+///////////////////////// HELPER FUNCTIONS //////////////////////////////
 function getWinner(){
   let points = {
     1: 0,
     '-1': 0
   }
+  
   // Loop through board and add up all scores
   board.forEach(function(el, idx){
     if(board[idx]){ // value is not 0
@@ -233,6 +237,7 @@ function isValidMove(peon, targetMove){
         board[cellRight] = 0;
       }
     }
+    // Check validity of calculated move
     if(Object.values(validMoves).includes(targetMove.id)){
       return move;
     }
@@ -253,12 +258,11 @@ function isValidMove(peon, targetMove){
         board[cellBackRight] = 0;
       }
     }
+    // Check validity of calculated move
     if(Object.values(validMoves).includes(targetMove.id)){
       return move;
     }
   }
-  // Check validity of calculated move
- 
   return false;
   
 }
