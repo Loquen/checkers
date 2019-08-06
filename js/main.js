@@ -16,8 +16,8 @@ const players = {
 }
 
 const kingable = {
-  1: [1,3,5,7],
-  '-1': [56,58,60,62]
+  '-1': [1,3,5,7],
+  1: [56,58,60,62]
 }
 /*----- app's state (variables) -----*/
 let board, winner, turn, peonSelected, validMoves, highlighted;
@@ -131,7 +131,8 @@ function handleClick(evt){
   } else if (peonSelected){       // N -> Is peonSelected?
     // Y -> isValidMove?
     let move = isValidMove(highlighted, evt.target);
-    console.log(move);
+    kingMe(move);
+    console.log(board[move]);
     // Y -> change turn and rerender
     if(move){
       turn *= -1;
@@ -151,7 +152,9 @@ function getWinner(){
   // Loop through board and add up all scores
   board.forEach(function(el, idx){
     if(board[idx]){ // value is not 0
-      points[board[idx]]++;
+      // Element is negative, add to the black side
+      // Element is positive, add to the white side
+      board[idx] > 0 ? points[1]++ : points['-1']++;
     } 
   });
 
@@ -160,14 +163,10 @@ function getWinner(){
   } else if (points[-(turn)] === 0){
     return turn;
   }
-  console.log(points);
-  // If element is negative, add to the black side
-  // if element is positive, add to the white side
 }
 
-function kingMe(){
-  // kingable[turn].includes(move)
-  // board[move] = 2 or -2;
+function kingMe(move){
+  if(kingable[turn].includes(move)) board[move] = turn * 2;
 }
 
 function isValidMove(peon, targetMove){
@@ -181,7 +180,6 @@ function isValidMove(peon, targetMove){
   let cellBackRight = cell - (9 * turn);
   let cellJumpBackLeft = cell - (14 * turn);
   let cellJumpBackRight = cell - (18 * turn);
-  //debugger;
   // If these cells are not occupied
   // TODO: Eventually it will need to check for double jumps, backwards/king movement
   validMoves = {
@@ -194,7 +192,7 @@ function isValidMove(peon, targetMove){
     'jumpBackLeft': `cell${cellJumpBackLeft.toString()}`,
     'jumpBackRight': `cell${cellJumpBackRight.toString()}`,
   }
-  debugger;
+  
   // If the cell we've clicked on is one of either validMoves.l or validMoves.r
   // Also need to check that there is no piece in cell
   if((move > cell && turn === 1) || (move < cell && turn === -1)){   // forward movement
