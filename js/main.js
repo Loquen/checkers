@@ -15,7 +15,7 @@ const players = {
   '-1': 'black'
 }
 
-const kingMe = {
+const kingable = {
   1: [1,3,5,7],
   '-1': [56,58,60,62]
 }
@@ -163,6 +163,11 @@ function getWinner(){
   console.log(points);
   // If element is negative, add to the black side
   // if element is positive, add to the white side
+}
+
+function kingMe(){
+  // kingable[turn].includes(move)
+  // board[move] = 2 or -2;
 }
 
 function isValidMove(peon, targetMove){
