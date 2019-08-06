@@ -213,23 +213,19 @@ function isValidMove(peon, targetMove){
     'jumpBackRight': `cell${cellJumpBackRight.toString()}`,
   }
   // Forward Movement
+  debugger;
   if((move > cell && turn === 1) || (move < cell && turn === -1)){   
     // If the cell we've clicked on is forward right or left
     // and check that cell is empty
     if((targetMove.id === validMoves.l || targetMove.id === validMoves.r) && (!board[cellLeft] || !board[cellRight])){
-      board[move] = board[cell];
-      board[cell] = 0;
+      completeJump(cell, move);
     } else if(targetMove.id === validMoves.jumpL || targetMove.id === validMoves.jumpR){
       // Otherwise we are checking the jump squares, and if valid we update board
       if((board[cellLeft] === -(turn) || board[cellLeft] === -(turn * 2)) && targetMove.id === validMoves.jumpL){ 
-        board[move] = board[cell];
-        board[cell] = 0;
-        board[cellLeft] = 0;
+        completeJump(cell, move, cellLeft);
       }
       if((board[cellRight] === -(turn) || board[cellRight] === -(turn * 2)) && targetMove.id === validMoves.jumpR){
-        board[move] = board[cell];
-        board[cell] = 0;
-        board[cellRight] = 0;
+        completeJump(cell, move, cellRight);
       }
     }
     // Check validity of calculated move
@@ -240,19 +236,14 @@ function isValidMove(peon, targetMove){
     // If the cell we've clicked on is back left or back right
     // and check that cell is empty
     if((targetMove.id === validMoves.backLeft || targetMove.id === validMoves.backRight) && (!board[cellBackLeft] || !board[cellBackRight])){
-      board[move] = board[cell];
-      board[cell] = 0;
+      completeJump(cell, move);
     } else if(targetMove.id === validMoves.jumpBackLeft || targetMove.id === validMoves.jumpBackRight){
       // Otherwise we are checking the jump squares, and if valid we update board
       if((board[cellBackLeft] === -(turn) || board[cellBackLeft] === -(turn * 2))  && targetMove.id === validMoves.jumpBackLeft){ // also check if targetMove === validMoves.jumpL... or jumpR
-        board[move] = board[cell];
-        board[cell] = 0;
-        board[cellBackLeft] = 0;
+        completeJump(cell, move, cellBackLeft);
       }
       if((board[cellBackRight] === -(turn) || board[cellBackRight] === -(turn * 2)) && targetMove.id === validMoves.jumpBackRight){ // May need to change this to deal with more kings
-        board[move] = board[cell];
-        board[cell] = 0;
-        board[cellBackRight] = 0;
+        completeJump(cell, move, cellBackRight);
       }
     }
     // Check validity of calculated move
@@ -261,5 +252,11 @@ function isValidMove(peon, targetMove){
     }
   }
   return false;
+}
+
+function completeJump(cell, move, ...jumps){
+  board[move] = board[cell];
+  board[cell] = 0;
   
+  if(jumps.length > 0) board[jumps[0]] = 0;
 }
