@@ -37,11 +37,11 @@ init();
 function init(){
   // Initialize the board with both players
   board = [
-    0,2,0,-2,0,0,0,0,
-    0,0,0,0,0,0,1,0,
-    0,0,0,2,0,-2,0,0,
     0,0,0,0,0,0,0,0,
-    0,1,0,0,0,-1,0,0,
+    0,0,-2,0,-1,0,1,0,
+    0,0,0,2,0,-2,0,0,
+    0,0,-1,0,-1,0,0,0,
+    0,0,0,0,0,0,0,0,
     -1,0,0,0,0,0,0,0,
     0,0,0,0,0,-1,0,0,
     0,0,0,0,0,0,0,0
@@ -199,6 +199,7 @@ function isValidMove(peon, targetMove){
   }
   // If the cell we've clicked on is one of either validMoves.l or validMoves.r
   // Also need to check that there is no piece in cell
+  debugger;
   if((move > cell && turn === 1) || (move < cell && turn === -1)){   // forward movement
     if((targetMove.id === validMoves.l || targetMove.id === validMoves.r) && (!board[cellLeft] || !board[cellRight])){
       board[move] = board[cell];
@@ -210,7 +211,7 @@ function isValidMove(peon, targetMove){
         board[cell] = 0;
         board[cellLeft] = 0;
       }
-      if(board[cellRight] === -(turn) || board[cellRight] === -(turn * 2)){
+      if((board[cellRight] === -(turn) || board[cellRight] === -(turn * 2)) && targetMove.id === validMoves.jumpR){
         board[move] = board[cell];
         board[cell] = 0;
         board[cellRight] = 0;
@@ -230,7 +231,7 @@ function isValidMove(peon, targetMove){
         board[cell] = 0;
         board[cellBackLeft] = 0;
       }
-      if(board[cellBackRight] === -(turn) || board[cellBackRight] === -(turn * 2)){ // May need to change this to deal with more kings
+      if((board[cellBackRight] === -(turn) || board[cellBackRight] === -(turn * 2)) && targetMove.id === validMoves.jumpBackRight){ // May need to change this to deal with more kings
         board[move] = board[cell];
         board[cell] = 0;
         board[cellBackRight] = 0;
