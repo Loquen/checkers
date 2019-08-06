@@ -363,31 +363,49 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  background-color: beige;
 } 
+
+div.outer {
+  border-top: 30px solid rgb(82, 33, 0);
+  border-left: 30px solid rgb(58, 23, 0);
+  border-bottom: 30px solid rgb(82, 33, 0);
+  border-right: 30px solid rgb(58, 23, 0);
+}
+
+div.inner {
+  border-top: 35px solid rgb(109, 43, 0);
+  border-left: 35px solid rgb(88, 41, 9);
+  border-bottom: 35px solid rgb(109, 43, 0);
+  border-right: 35px solid rgb(88, 41, 9);
+}
 
 section.board {
   display: grid;
   grid-template-columns: repeat(8, 10vmin);
   grid-template-rows: repeat(8, 10vmin);
-  /* grid-auto-flow: column;  */
-  border: 10px solid goldenrod;
-  /* grid-gap: 1vmin; */
+  border: 20px solid burlywood;
+  border-top: 35px solid burlywood;
+  border-left: 35px solid rgb(209, 172, 124);
+  border-bottom: 35px solid burlywood;
+  border-right: 35px solid rgb(209, 172, 124);
 }
 
 section.board div.even, section.board div.odd {
   display:flex;
   justify-content: center;
   align-items: center;
-  border: 3px solid goldenrod;
-  background-color: black;
+  border: 3px solid burlywood;
+  background-color: rgb(102, 46, 0);
   color: #fff;
 }
+
 section.board div.even:nth-child(even) {
-  background-color: red;
+  background-color: beige;
 }
 
 section.board div.odd:nth-child(odd) {
-  background-color: red;
+  background-color: beige;
 }
 
 section.board div.white {
@@ -400,7 +418,7 @@ section.board div.white {
 
 section.board div.black {
   background-color: black;
-  border: 3px solid white;
+  border: 3px solid black;
   border-radius: 50%;
   width: 85%;
   height: 85%;
@@ -414,7 +432,6 @@ section.board div.king {
   position: relative;
   box-shadow: 
     inset 0 0 0 8px hsl(54, 90%, 50%)
-    /* inset 0 0 0 20px hsl(40, 90%, 50%)   */
 }
 
 section.board div.valid-move {
@@ -422,20 +439,18 @@ section.board div.valid-move {
 }
 
 .modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
+  display: none; /* Hidden to start */
+  position: fixed;
   z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
+  padding-top: 100px;
   left: 0;
   top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
+  width: 100%;
+  height: 100%;
   background-color: rgb(0,0,0); /* Fallback color */
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
-/* Modal Content */
 .modal-content {
   background-color: #fefefe;
   margin: auto;
@@ -445,7 +460,6 @@ section.board div.valid-move {
   text-align: center;
 }
 
-/* The Close Button */
 .closeModal {
   color: #aaaaaa;
   float: right;
@@ -458,4 +472,11 @@ section.board div.valid-move {
   color: #000;
   text-decoration: none;
   cursor: pointer;
+}
+
+button {
+  background-color: burlywood;
+  border-style: none;
+  padding: 10px;
+  margin: 20px;
 }
