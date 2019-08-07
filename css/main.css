@@ -396,7 +396,7 @@ section.board div.even, section.board div.odd {
   justify-content: center;
   align-items: center;
   border: 3px solid burlywood;
-  background-color: rgb(102, 46, 0);
+  background-color: rgb(109, 60, 20);
   /* background-image: url('../imgs/black.jpg'); */
   color: #fff;
 }
@@ -413,7 +413,7 @@ section.board div.odd:nth-child(odd) {
 
 section.board div.white {
   background-color: white;
-  border: 3px solid white;
+  border: 3px solid blanchedalmond;
   border-radius: 50%;
   width: 85%;
   height: 85%;
@@ -421,7 +421,7 @@ section.board div.white {
 
 section.board div.black {
   background-color:black;
-  border: 3px solid rgb(82, 82, 82);
+  border: 3px solid blanchedalmond;
   border-radius: 50%;
   width: 85%;
   height: 85%;
