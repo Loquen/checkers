@@ -238,10 +238,10 @@ function isValidMove(peon, targetMove){
   }
   // Forward Movement
   debugger;
-  if((move > cell && turn === 1) || (move < cell && turn === -1)){   
+  if(((move > cell && turn === 1) || (move < cell && turn === -1)) && !board[move]){   
     // If the cell we've clicked on is forward right or left
     // and check that cell is empty
-    if((targetMove.id === validMoves.l || targetMove.id === validMoves.r) && (!board[cellLeft] || !board[cellRight])){
+    if((targetMove.id === validMoves.l || targetMove.id === validMoves.r)){
       completeJump(cell, move);
     } else if(targetMove.id === validMoves.jumpL || targetMove.id === validMoves.jumpR){
       // Otherwise we are checking the jump squares, and if valid we update board
@@ -256,10 +256,10 @@ function isValidMove(peon, targetMove){
     if(Object.values(validMoves).includes(targetMove.id)){
       return move;
     }
-  } else if(board[cell] === turn * 2){ // If king, check for backwards movement
+  } else if((board[cell] === turn * 2) && !board[move]){ // If king, check for backwards movement
     // If the cell we've clicked on is back left or back right
     // and check that cell is empty
-    if((targetMove.id === validMoves.backLeft || targetMove.id === validMoves.backRight) && (!board[cellBackLeft] || !board[cellBackRight])){
+    if((targetMove.id === validMoves.backLeft || targetMove.id === validMoves.backRight)){
       completeJump(cell, move);
     } else if(targetMove.id === validMoves.jumpBackLeft || targetMove.id === validMoves.jumpBackRight){
       // Otherwise we are checking the jump squares, and if valid we update board
@@ -271,7 +271,7 @@ function isValidMove(peon, targetMove){
       }
     }
     // Check validity of calculated move
-    if(Object.values(validMoves).includes(targetMove.id)){
+    if(Object.values(validMoves).includes(targetMove.id)){ // TODO!!! Need to fix this so that we are validating the move is going to an empty square
       return move;
     }
   }
