@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css?family=MedievalSharp&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
   <script defer src="js/main.js"></script>
+  <script defer src="js/confetti.min.js"></script>
 </head>
 <body>
   <header>
@@ -93,7 +94,7 @@
   </div>
   <footer>
     <button>Reset</button>        
-    <a href="">How to Play</a>
+    <a href="https://github.com/Loquen/checkers#getting-started-how-to-play">How to Play</a>
   </footer>
   <!-- MODAL for win logic -->
   <div id="winModal" class="modal">
@@ -102,5 +103,6 @@
       <h1 id="winMsg"></h1>
     </div>  
   </div>
+  <audio id="bg-player" src="/sounds/background.wav" loop volume=".3"></audio>
 </body>
 </html>

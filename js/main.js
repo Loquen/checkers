@@ -19,6 +19,16 @@ const kingable = {
   '-1': ['cell1','cell3','cell5','cell7'],
   1: ['cell56','cell58','cell60','cell62']
 }
+
+sounds = {
+  'background': '../sounds/background.wav',
+  'king': '../sounds/king.wav',
+  'capture': '../sounds/capture.wav',
+  'win': '../sounds/win.wav'
+}
+
+const audio = new Audio();
+
 /*------------------ STATE VARIABLES -----------------*/
 let board, winner, turn, peonSelected, validMoves, highlighted;
 
@@ -64,6 +74,8 @@ function init(){
   winner = null;
   // Set selected to false (no piece selected)
   peonSelected = false;
+  // Play background music
+  document.getElementById('bg-player').play();
   // Call render() to refresh the state
   render();
 }
@@ -77,6 +89,7 @@ function reset(){
     }
   });
   init();
+  confetti.stop();
 }
 
 function render(){
@@ -103,9 +116,17 @@ function render(){
   if(winner){
     modalEl.style.display = "block";
     winEl.textContent =`${players[winner][0].toUpperCase()}${players[winner].slice(1)} Wins!`
+    //Play a sound and shoot some confetti!
+    playSound('win');
+    confetti.start();
   } else {
     turnEl.textContent = `${players[turn][0].toUpperCase()}${players[turn].slice(1)}'s Turn`
   }
+}
+
+function playSound(name){
+  audio.src = sounds[name];
+  audio.play();
 }
 
 ////////////////////////////// CLICK HANDLING ////////////////////////////////
@@ -186,7 +207,10 @@ function getWinner(){
 
 function kingMe(move){
   let cell = `cell${move}`
-  if(kingable[turn].includes(cell)) board[move] = turn * 2;
+  if(kingable[turn].includes(cell)) {
+    board[move] = turn * 2;
+    playSound('king');
+  }
 }
 
 function isValidMove(peon, targetMove){
@@ -258,5 +282,8 @@ function completeJump(cell, move, ...jumps){
   board[move] = board[cell];
   board[cell] = 0;
   
-  if(jumps.length > 0) board[jumps[0]] = 0;
+  if(jumps.length > 0) {
+    board[jumps[0]] = 0;
+    playSound('capture');
+  }
 }
