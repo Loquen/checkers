@@ -50,9 +50,9 @@ function init(){
   // Initialize the board with both players
   board = [
     0,0,0,0,0,0,0,0,
-    0,0,-2,0,0,0,0,0,
+    0,0,-2,0,1,0,0,0,
     0,0,0,2,0,0,0,0,
-    0,0,1,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,
     0,0,0,0,0,1,0,0,
@@ -108,7 +108,7 @@ function render(){
           div = board[idx] === -1 ? div.classList.add('black') : div.classList.add('black', 'king');
         }        
       }else {
-        div.classList.remove('white', 'black', highlight);
+        div.classList.remove('white', 'black', highlight, 'king');
       }
     }
   });

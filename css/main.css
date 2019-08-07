@@ -397,18 +397,18 @@ section.board div.even, section.board div.odd {
   align-items: center;
   border: 3px solid burlywood;
   background-color: rgb(102, 46, 0);
-  background-image: url('../imgs/black.jpg');
+  /* background-image: url('../imgs/black.jpg'); */
   color: #fff;
 }
 
 section.board div.even:nth-child(even) {
   background-color: beige;
-  background-image: url('../imgs/white.jpg');
+  /* background-image: url('../imgs/white.jpg'); */
 }
 
 section.board div.odd:nth-child(odd) {
   background-color: beige;
-  background-image: url('../imgs/white.jpg');
+  /* background-image: url('../imgs/white.jpg'); */
 }
 
 section.board div.white {
@@ -420,7 +420,7 @@ section.board div.white {
 }
 
 section.board div.black {
-  background-color: rgb(82, 82, 82);
+  background-color:black;
   border: 3px solid rgb(82, 82, 82);
   border-radius: 50%;
   width: 85%;
