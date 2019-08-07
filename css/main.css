@@ -382,8 +382,8 @@ div.inner {
 
 section.board {
   display: grid;
-  grid-template-columns: repeat(8, 10vmin);
-  grid-template-rows: repeat(8, 10vmin);
+  grid-template-columns: repeat(8, 7vmin);
+  grid-template-rows: repeat(8, 7vmin);
   border: 20px solid burlywood;
   border-top: 35px solid burlywood;
   border-left: 35px solid rgb(209, 172, 124);
