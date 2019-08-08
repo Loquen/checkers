@@ -247,7 +247,6 @@ function isValidMove(peon, targetMove){
   calculatePossibleMoves(cell);
 
   // Forward Movement
-  debugger;
   if(((move > cell && turn === 1) || (move < cell && turn === -1)) && !board[move]){   
     // If the cell we've clicked on is forward right or left
     // and check that cell is empty
@@ -330,7 +329,6 @@ function calculatePossibleMoves(cell){
 }
 
 function computer(){
-  debugger;
   // Loop over board array
   board.forEach(function(cell, idx){
     // The piece is computer's
@@ -360,12 +358,12 @@ function computer(){
 }
 
 function noMoveWin(){
-  debugger;
   let canMove = 0;
   // Loop through board
-  validSquares.forEach(function(cell, idx){
-    if((board[cell] === 1 || board[cell] === 2)){
-     
+  validSquares.forEach(function(cell){
+    // If we are white
+    if(board[cell] === 1 || board[cell] === 2){
+      // Check valid moves for that piece
       calculatePossibleMoves(cell);
       for(target in validMoves.id){
         if(board[cell] !== 2 && target.includes('jump')){
@@ -379,12 +377,8 @@ function noMoveWin(){
       return;
     }
   });
-  if(!canMove){
+  // If we can't move the cpu has won
+  if(!canMove){ 
     winner = cpu;
   }
-  // If piece === 1 || piece === 2 we know we are white
-  //   - check valid moves for that piece
-  //   - if move we return null / no win
-  //   - as soon as we find any valid move, we know the game can continue
-  
 }
