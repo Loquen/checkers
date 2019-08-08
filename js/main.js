@@ -34,13 +34,14 @@ let board, winner, turn, cpu, cpuMove, peonSelected, validMoves, highlighted;
 
 /*----------------- CACHED ELEMENT REFERENCES ---------------------*/
 let turnEl = document.getElementById('turn');
-let modalEl = document.getElementById('winModal');
-let winEl = document.getElementById('winMsg');
+let modalEl = document.getElementById('msgModal');
+let msgEl = document.getElementById('msg');
 let highlight = 'highlight';
 
 /*-------------- EVENT LISTENERS ---------------*/
 document.querySelector('.board').addEventListener('click', handleClick);
-document.querySelector('button').addEventListener('click', reset);
+document.querySelector('.reset').addEventListener('click', reset);
+document.querySelector('.how-to-play').addEventListener('click', howToPlay);
 document.querySelector('.closeModal').addEventListener('click', closeModal);
 
 /*--------------- FUNCTIONS ---------------*/
@@ -48,26 +49,26 @@ init();
 
 function init(){
   // Initialize the board with both players
-  board = [
-    0,0,0,0,0,1,0,0,
-    0,0,-2,0,1,0,0,0,
-    0,0,0,1,0,-1,0,0,
-    0,0,-1,0,-1,0,-1,0,
-    0,-1,0,0,0,-1,0,0,
-    0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0
-  ];
   // board = [
-  //   0,1,0,1,0,1,0,1,
-  //   1,0,1,0,1,0,1,0,
-  //   0,1,0,1,0,1,0,1,
+  //   0,0,0,0,0,1,0,0,
+  //   0,0,-2,0,1,0,0,0,
+  //   0,0,0,1,0,-1,0,0,
+  //   0,0,-1,0,-1,0,-1,0,
+  //   0,-1,0,0,0,-1,0,0,
   //   0,0,0,0,0,0,0,0,
   //   0,0,0,0,0,0,0,0,
-  //   -1,0,-1,0,-1,0,-1,0,
-  //   0,-1,0,-1,0,-1,0,-1,
-  //   -1,0,-1,0,-1,0,-1,0
+  //   0,0,0,0,0,0,0,0
   // ];
+  board = [
+    0,1,0,1,0,1,0,1,
+    1,0,1,0,1,0,1,0,
+    0,1,0,1,0,1,0,1,
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    -1,0,-1,0,-1,0,-1,0,
+    0,-1,0,-1,0,-1,0,-1,
+    -1,0,-1,0,-1,0,-1,0
+  ];
   // Set turn to Player 1
   turn = 1;
   cpu = -1;
@@ -92,6 +93,14 @@ function reset(){
   });
   init();
   confetti.stop();
+}
+
+function howToPlay(){
+  modalEl.style.display = "block";
+  msgEl.textContent =`White to play first. Peóns move diagonally forward. If there is an opponent diagonally 
+  in front of your peón you can capture with a jump if the following diagonal square is free. If your peón 
+  gets to the far side of the board it becomes a king (can move backwards). Game is won when one side captures
+  all the opponent's peóns or the other side is unable to move.`;
 }
 
 function render(){
@@ -126,7 +135,7 @@ function render(){
 
   if(winner){
     modalEl.style.display = "block";
-    winEl.textContent =`${players[winner][0].toUpperCase()}${players[winner].slice(1)} Wins!`;
+    msgEl.textContent =`${players[winner][0].toUpperCase()}${players[winner].slice(1)} Wins!`;
     //Play a sound and shoot some confetti!
     playSound('win');
     confetti.start();
@@ -183,13 +192,13 @@ function handleClick(evt){
 
 // Close modal on click of X
 function closeModal(evt){
-  winModal.style.display = "none";
+  modalEl.style.display = "none";
 }
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(evt){
-  if(evt.target == winModal){
-    winModal.style.display = "none";
+  if(evt.target == modalEl){
+    modalEl.style.display = "none";
   }
 }
 

@@ -14,11 +14,12 @@
   - White to play first.
   - Peóns move diagonally forward.
   - If there is an opponent diagonally in front of your 
-    peóns you can jump it if the following diagonal square is free.
-  - If your peón gets to the far side of the board, 
-    peón becomes a king (can move backwards).
-  - Game is won when one side captures all the 
-    opponent's peón.
+    peón you can capture with a jump if the following diagonal 
+    square is free.
+  - If your peón gets to the far side of the board it becomes a 
+    king (can move backwards).
+  - Game is won when one side captures all the opponent's 
+    peóns or the other side is unable to move.
 
 ## Next Steps: Planned future enhancements (icebox items):
   - Implement Computer AI
