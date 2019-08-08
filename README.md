@@ -5,8 +5,7 @@
 ## Screenshots:
 
 ![Checkers Layout](https://i.imgur.com/jokmAuF.png "Checkers")
-  https://i.imgur.com/jokmAuF.png
-
+![Checkers Win Layout](https://i.imgur.com/Tdu8amy.png "Checkers Win")
 
 ## Technologies Used: 
   - JavaScript 
