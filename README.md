@@ -22,6 +22,5 @@
     peóns or the other side is unable to move.
 
 ## Next Steps: Planned future enhancements (icebox items):
-  - Implement Computer AI
   - Double jumps
   - Modify to create Chess
