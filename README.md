@@ -1,6 +1,6 @@
 # Checkers (Draughts)
 
-#### Draughts (British English) or checkers (American English) is a group of strategy board games for two players which involve diagonal moves of uniform game pieces and mandatory captures by jumping over opponent pieces. Draughts developed from [alquerque](https://en.wikipedia.org/wiki/Alquerque), a game originating in the Middle East. The name derives from the verb to draw or to move.
+ Draughts (British English) or checkers (American English) is a group of strategy board games for two players which involve diagonal moves of uniform game pieces and mandatory captures by jumping over opponent pieces. Draughts developed from [alquerque](https://en.wikipedia.org/wiki/Alquerque), a game originating in the Middle East. The name derives from the verb to draw or to move.
 
 ## Screenshots:
 
@@ -12,7 +12,7 @@
   - HTML
   - CSS
 
-## Getting Started: How to Play:
+## Getting Started: How to Play
   - [To Play](https://loquen.github.io/checkers/)
   - White to play first.
   - Peóns move diagonally forward.
