@@ -21,10 +21,10 @@ const kingable = {
 };
 
 sounds = {
-  'background': '../sounds/background.wav',
-  'king': '../sounds/king.wav',
-  'capture': '../sounds/capture.wav',
-  'win': '../sounds/win.wav'
+  'background': 'sounds/background.wav',
+  'king': 'sounds/king.wav',
+  'capture': 'sounds/capture.wav',
+  'win': 'sounds/win.wav'
 };
 
 const audio = new Audio();
@@ -48,26 +48,26 @@ init();
 
 function init(){
   // Initialize the board with both players
-  // board = [
-  //   0,0,0,0,0,0,0,0,
-  //   0,0,-2,0,1,0,0,0,
-  //   0,0,0,2,0,0,0,0,
-  //   0,0,0,0,0,0,0,0,
-  //   0,0,0,0,0,0,0,0,
-  //   0,0,0,0,0,0,0,0,
-  //   0,0,0,0,0,1,0,0,
-  //   0,0,0,0,0,0,0,0
-  // ];
   board = [
-    0,1,0,1,0,1,0,1,
-    1,0,1,0,1,0,1,0,
-    0,1,0,1,0,1,0,1,
+    0,0,0,0,0,1,0,0,
+    0,0,-2,0,1,0,0,0,
+    0,0,0,1,0,-1,0,0,
+    0,0,-1,0,-1,0,-1,0,
+    0,-1,0,0,0,-1,0,0,
     0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,
-    -1,0,-1,0,-1,0,-1,0,
-    0,-1,0,-1,0,-1,0,-1,
-    -1,0,-1,0,-1,0,-1,0
+    0,0,0,0,0,0,0,0
   ];
+  // board = [
+  //   0,1,0,1,0,1,0,1,
+  //   1,0,1,0,1,0,1,0,
+  //   0,1,0,1,0,1,0,1,
+  //   0,0,0,0,0,0,0,0,
+  //   0,0,0,0,0,0,0,0,
+  //   -1,0,-1,0,-1,0,-1,0,
+  //   0,-1,0,-1,0,-1,0,-1,
+  //   -1,0,-1,0,-1,0,-1,0
+  // ];
   // Set turn to Player 1
   turn = 1;
   cpu = -1;
@@ -120,6 +120,9 @@ function render(){
     cpuMove = true;
     computer();
   }
+
+  // Check if player can move
+  noMoveWin();
 
   if(winner){
     modalEl.style.display = "block";
@@ -220,8 +223,11 @@ function getWinner(){
 function kingMe(move){
   let cell = `cell${move}`;
   if(kingable[turn].includes(cell)){
-    board[move] = turn * 2;
-    playSound('king');
+    if(board[move] !== turn * 2){
+      board[move] = turn * 2;
+      playSound('king');
+    }
+    
   }
 }
 
@@ -342,4 +348,34 @@ function computer(){
       winner = -(cpu);  // If no valid moves, then player wins
     }
   });
+}
+
+function noMoveWin(){
+  debugger;
+  let canMove = 0;
+  // Loop through board
+  validSquares.forEach(function(cell, idx){
+    if((board[cell] === 1 || board[cell] === 2)){
+     
+      calculatePossibleMoves(cell);
+      for(target in validMoves.id){
+        if(board[cell] !== 2 && target.includes('jump')){
+          break;
+        }
+        if(board[validMoves.id[target]] === 0 && validSquares.includes(validMoves.id[target])){
+          canMove++;
+        }
+      }
+    }else if(canMove){
+      return;
+    }
+  });
+  if(!canMove){
+    winner = cpu;
+  }
+  // If piece === 1 || piece === 2 we know we are white
+  //   - check valid moves for that piece
+  //   - if move we return null / no win
+  //   - as soon as we find any valid move, we know the game can continue
+  
 }
