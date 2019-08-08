@@ -4,6 +4,10 @@
 
 ## Screenshots:
 
+![Checkers Layout](https://i.imgur.com/jokmAuF.png "Checkers")
+  https://i.imgur.com/jokmAuF.png
+
+
 ## Technologies Used: 
   - JavaScript 
   - HTML
