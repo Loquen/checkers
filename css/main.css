@@ -397,18 +397,15 @@ section.board div.even, section.board div.odd {
   align-items: center;
   border: 3px solid burlywood;
   background-color: rgb(109, 60, 20);
-  /* background-image: url('../imgs/black.jpg'); */
   color: #fff;
 }
 
 section.board div.even:nth-child(even) {
   background-color: beige;
-  /* background-image: url('../imgs/white.jpg'); */
 }
 
 section.board div.odd:nth-child(odd) {
   background-color: beige;
-  /* background-image: url('../imgs/white.jpg'); */
 }
 
 section.board div.white {
@@ -482,4 +479,8 @@ button {
   border-style: none;
   padding: 10px;
   margin: 20px;
+}
+
+button:hover {
+  background-color: rgb(187, 170, 147);
 }

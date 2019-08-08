@@ -83,25 +83,6 @@ function init(){
   render();
 }
 
-function reset(){
-  board.forEach(function(cell, idx){
-    let id = `#cell${idx.toString()} div`;
-    let div = document.querySelector(id);
-    if(div){
-      div.classList.remove('white', 'black', highlight, 'king');
-    }
-  });
-  init();
-  confetti.stop();
-}
-
-function howToPlay(){
-  modalEl.style.display = "block";
-  msgEl.textContent =`White to play first. Peóns move diagonally forward. If there is an opponent diagonally 
-  in front of your peón you can capture with a jump if the following diagonal square is free. If your peón 
-  gets to the far side of the board it becomes a king (can move backwards). Game is won when one side captures
-  all the opponent's peóns or the other side is unable to move.`;
-}
 
 function render(){
   // Loop through board array and render each cell as empty or peon
@@ -144,10 +125,7 @@ function render(){
   }
 }
 
-function playSound(name){
-  audio.src = sounds[name];
-  audio.play();
-}
+
 
 ////////////////////////////// CLICK HANDLING ////////////////////////////////
 
@@ -202,44 +180,27 @@ window.onclick = function(evt){
   }
 }
 
-///////////////////////// HELPER FUNCTIONS //////////////////////////////
-function getWinner(){
-  let points = {
-    1: 0,
-    '-1': 0
-  }
-
-  // Loop through board and add up all scores
-  board.forEach(function(el, idx){
-    if(board[idx]){ // value is not 0
-      // Element is negative, add to the black side
-      // Element is positive, add to the white side
-      board[idx] > 0 ? points[1]++ : points['-1']++;
-
-      // TODO: If there are no moves left, otherside wins
-      // Check each piece's valid moves
-      // Loop over valid moves, if move is valid, break
-    } 
-  });
-
-  if(points[turn] === 0){
-    return -(turn);
-  }else if(points[-(turn)] === 0){
-    return turn;
-  }
+function howToPlay(){
+  modalEl.style.display = "block";
+  msgEl.textContent =`White to play first. Peóns move diagonally forward. If there is an opponent diagonally 
+  in front of your peón you can capture with a jump if the following diagonal square is free. If your peón 
+  gets to the far side of the board it becomes a king (can move backwards). Game is won when one side captures
+  all the opponent's peóns or the other side is unable to move.`;
 }
 
-function kingMe(move){
-  let cell = `cell${move}`;
-  if(kingable[turn].includes(cell)){
-    if(board[move] !== turn * 2){
-      board[move] = turn * 2;
-      playSound('king');
+function reset(){
+  board.forEach(function(cell, idx){
+    let id = `#cell${idx.toString()} div`;
+    let div = document.querySelector(id);
+    if(div){
+      div.classList.remove('white', 'black', highlight, 'king');
     }
-    
-  }
+  });
+  init();
+  confetti.stop();
 }
 
+///////////////////////// HELPER FUNCTIONS //////////////////////////////
 function isValidMove(peon, targetMove){
   let cell = parseInt(peon.parentNode.id.replace('cell', ''));
   let move = parseInt(targetMove.id.replace('cell', ''));
@@ -286,16 +247,6 @@ function isValidMove(peon, targetMove){
   return false;
 }
 
-function completeJump(cell, move, ...jumps){
-  board[move] = board[cell];
-  board[cell] = 0;
-  
-  if(jumps.length > 0){
-    board[jumps[0]] = 0;
-    playSound('capture');
-  }
-}
-
 function calculatePossibleMoves(cell){
   let cellLeft = cell + (7 * turn);
   let jumpLeft = cell + (14 * turn);
@@ -326,6 +277,16 @@ function calculatePossibleMoves(cell){
       'cellJumpBackRight': cellJumpBackRight
     }
   };
+}
+
+function completeJump(cell, move, ...jumps){
+  board[move] = board[cell];
+  board[cell] = 0;
+  
+  if(jumps.length > 0){
+    board[jumps[0]] = 0;
+    playSound('capture');
+  }
 }
 
 function computer(){
@@ -381,4 +342,46 @@ function noMoveWin(){
   if(!canMove){ 
     winner = cpu;
   }
+}
+
+function getWinner(){
+  let points = {
+    1: 0,
+    '-1': 0
+  }
+
+  // Loop through board and add up all scores
+  board.forEach(function(el, idx){
+    if(board[idx]){ // value is not 0
+      // Element is negative, add to the black side
+      // Element is positive, add to the white side
+      board[idx] > 0 ? points[1]++ : points['-1']++;
+
+      // TODO: If there are no moves left, otherside wins
+      // Check each piece's valid moves
+      // Loop over valid moves, if move is valid, break
+    } 
+  });
+
+  if(points[turn] === 0){
+    return -(turn);
+  }else if(points[-(turn)] === 0){
+    return turn;
+  }
+}
+
+function kingMe(move){
+  let cell = `cell${move}`;
+  if(kingable[turn].includes(cell)){
+    if(board[move] !== turn * 2){
+      board[move] = turn * 2;
+      playSound('king');
+    }
+    
+  }
+}
+
+function playSound(name){
+  audio.src = sounds[name];
+  audio.play();
 }
