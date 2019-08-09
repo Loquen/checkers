@@ -43,22 +43,23 @@ document.querySelector('.board').addEventListener('click', handleClick);
 document.querySelector('.reset').addEventListener('click', reset);
 document.querySelector('.how-to-play').addEventListener('click', howToPlay);
 document.querySelector('.closeModal').addEventListener('click', closeModal);
+document.querySelector('.cheat-mode').addEventListener('click', cheatMode);
 
 /*--------------- FUNCTIONS ---------------*/
 init();
 
 function init(){
   // Initialize the board with both players
-  // board = [
-  //   0,0,0,0,0,1,0,0,
-  //   0,0,-2,0,1,0,0,0,
-  //   0,0,0,1,0,-1,0,0,
-  //   0,0,-1,0,-1,0,-1,0,
-  //   0,-1,0,0,0,-1,0,0,
-  //   0,0,0,0,0,0,0,0,
-  //   0,0,0,0,0,0,0,0,
-  //   0,0,0,0,0,0,0,0
-  // ];
+  cheatBoard = [
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,2,0,0,0,
+    0,0,0,1,0,1,0,0,
+    0,0,-1,0,1,0,0,0,
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0
+  ];
   board = [
     0,1,0,1,0,1,0,1,
     1,0,1,0,1,0,1,0,
@@ -198,6 +199,11 @@ function reset(){
   });
   init();
   confetti.stop();
+}
+
+function cheatMode(evt){
+  board = cheatBoard;
+  render();
 }
 
 ///////////////////////// HELPER FUNCTIONS //////////////////////////////
